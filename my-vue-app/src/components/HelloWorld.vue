@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div>Selamat Datang {{ myText }}</div>
+    <div>Selamat Datang</div>
     <ul>
-      <li v-for="item in todos">{{ item.desc}}</li>
+      <li v-for="item in todos" :key="item.id">{{ item.Desk }}</li>
       
     </ul>
     <input v-model="myText"/>
@@ -13,22 +13,30 @@
 
 
 <script>
+import axios from 'axios'
 export default{
   data : function(){
     return{
-      todos : [
-      {desc: 'Makan Durian' },
-      {desc: 'Makan Pisang'},
-      {desc: 'Coding JS'}
-      ],
+      todos : [],
       myText: ''
     }
   },
+  created: function() {
+    axios.get('http://localhost:3000/todo').then(result => {
+      this.todos = result.data
+    })
+  },
   methods:{
     tambah : function(){
-      this.todos.push({desc: this.myText})
+      conts item = { Desk : this.myText };
+      axios.post('http://localhost:3000/todo', item)
+      .then(() => {
+        this.todos.push(item)
+      })
+    },
+    hapus: function(id) {
+      axios.delete(`http:localhost:3000/todo/${id}`)
     }
-
   }
 }
 </script>
